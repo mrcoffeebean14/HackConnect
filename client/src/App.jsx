@@ -9,9 +9,9 @@ function App() {
   }, []);
 
   return (
-    <>
-      <h1 className="text-4xl font-bold text-blue-600">Hello Tailwind!</h1>
-    </>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white text-3xl ">
+      Hello Gradient
+    </div>
   );
 }
 
