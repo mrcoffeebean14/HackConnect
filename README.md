@@ -56,6 +56,7 @@
 ---
 
 ## 📌 **Project Structure**
+![image](https://github.com/user-attachments/assets/91913f69-580d-46b9-b107-bf535068d107)
 
 
 ---
