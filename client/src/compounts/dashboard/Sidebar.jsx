@@ -16,26 +16,27 @@ import useLogout from '../useLogout';
 
 const Sidebar = ({ sidebarCollapsed, setSidebarCollapsed, activeSection, setActiveSection }) => {
   const navigate = useNavigate();
-
   const handleLogout = useLogout();
-  
 
   const sidebarItems = [
-    { icon: Home, label: 'Home' },
-    { icon: UserCircle, label: 'My Profile' },
+    { icon: Home, label: 'Home',path:"/dashboard" },
+    { icon: UserCircle, label: 'My Profile', path: '/profile' }, // 👈 added path
     { icon: FolderOpen, label: 'My Projects' },
     { icon: Users, label: 'Team Matching' },
     { icon: MessageSquare, label: 'Messages' },
     { icon: Bell, label: 'Notifications' },
     { icon: Settings, label: 'Settings' },
-    { icon: LogOut, label: 'Logout', onClick: handleLogout }, // <- logout handler here
+    { icon: LogOut, label: 'Logout', onClick: handleLogout },
   ];
 
-  const handleSidebarItemClick = (label, onClick) => {
+  const handleSidebarItemClick = (label, onClick, path) => {
     if (label === 'Logout') {
       onClick?.();
     } else {
       setActiveSection(label);
+      if (path) {
+        navigate(path); // 👈 navigate to route if path is provided
+      }
     }
   };
 
@@ -68,7 +69,7 @@ const Sidebar = ({ sidebarCollapsed, setSidebarCollapsed, activeSection, setActi
           return (
             <button
               key={index}
-              onClick={() => handleSidebarItemClick(item.label, item.onClick)}
+              onClick={() => handleSidebarItemClick(item.label, item.onClick, item.path)}
               className={`group flex items-center w-full rounded-lg px-3 py-2 text-sm font-medium transition ${
                 isActive
                   ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
