@@ -7,8 +7,9 @@ const router = express.Router({ mergeParams: true });
 // REGISTER ROUTE (keep this unchanged if already working)
 router.post('/register', async (req, res, next) => {
   try {
-    const { email, password } = req.body;
-    const user = new User({ email });
+    console.log(req.body)
+    const { username,email, password } = req.body;
+    const user = new User({ email,username });
 
     const registeredUser = await User.register(user, password);
     req.login(registeredUser, (err) => {
@@ -18,7 +19,8 @@ router.post('/register', async (req, res, next) => {
         message: 'User registered',
         user: {
           id: registeredUser._id,
-          email: registeredUser.email
+          email: registeredUser.email,
+          username:registeredUser.username
         }
       });
     });
@@ -57,6 +59,18 @@ router.post('/logout', (req, res) => {
       return res.status(200).json({ success: true, message: 'Logged out successfully' });
     });
   });
+});
+
+router.get('/dashboard', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json({
+      id: req.user._id,
+      name: req.user.username,
+      email: req.user.email
+    });
+  } else {
+    res.status(401).json({ error: 'Not authenticated' });
+  }
 });
 
 
