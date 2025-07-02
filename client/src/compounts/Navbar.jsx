@@ -67,7 +67,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">//Mobile menu button container
+          <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
               aria-expanded={isOpen}
