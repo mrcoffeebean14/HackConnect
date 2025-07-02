@@ -11,8 +11,15 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import useLogout from '../useLogout';
 
 const Sidebar = ({ sidebarCollapsed, setSidebarCollapsed, activeSection, setActiveSection }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = useLogout();
+  
+
   const sidebarItems = [
     { icon: Home, label: 'Home' },
     { icon: UserCircle, label: 'My Profile' },
@@ -21,11 +28,15 @@ const Sidebar = ({ sidebarCollapsed, setSidebarCollapsed, activeSection, setActi
     { icon: MessageSquare, label: 'Messages' },
     { icon: Bell, label: 'Notifications' },
     { icon: Settings, label: 'Settings' },
-    { icon: LogOut, label: 'Logout' },
+    { icon: LogOut, label: 'Logout', onClick: handleLogout }, // <- logout handler here
   ];
 
-  const handleSidebarItemClick = (label) => {
-    setActiveSection(label);
+  const handleSidebarItemClick = (label, onClick) => {
+    if (label === 'Logout') {
+      onClick?.();
+    } else {
+      setActiveSection(label);
+    }
   };
 
   return (
@@ -57,7 +68,7 @@ const Sidebar = ({ sidebarCollapsed, setSidebarCollapsed, activeSection, setActi
           return (
             <button
               key={index}
-              onClick={() => handleSidebarItemClick(item.label)}
+              onClick={() => handleSidebarItemClick(item.label, item.onClick)}
               className={`group flex items-center w-full rounded-lg px-3 py-2 text-sm font-medium transition ${
                 isActive
                   ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'

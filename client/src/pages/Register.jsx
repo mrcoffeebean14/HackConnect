@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from "../compounts/Navbar"
 import { useState } from 'react';
 
 const Register = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -18,26 +19,36 @@ const Register = () => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-
     if (form.password !== form.confirmPassword) {
       alert("Passwords do not match");
       return;
     }
 
-    const res = await fetch('http://localhost:5000/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({
-        username: `${form.firstName} ${form.lastName}`,
-        email: form.email,
-        password: form.password
-      })
+    try {
+      const res = await fetch('http://localhost:5000/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          username: `${form.firstName} ${form.lastName}`,
+          email: form.email,
+          password: form.password
+        })
+      });
 
-    });
+      const data = await res.json();
+      console.log(data);
 
-    const data = await res.json();
-    console.log(data);
+      if (res.ok && data.success) {
+        // ✅ Registration success → redirect to dashboard
+        navigate('/dashboard');
+      } else {
+        alert(data.message || "Registration failed");
+      }
+    } catch (err) {
+      console.error("Registration error:", err);
+      alert("An error occurred during registration");
+    }
   };
 
 

@@ -8,9 +8,11 @@ import {
   UserCircle,
 } from 'lucide-react';
 import { useState } from 'react';
+import useLogout from '../useLogout';
 
 const NavbarDash = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const uselogout = useLogout();
 
   return (
     <nav className="bg-white/80 backdrop-blur-md border-b border-slate-200/60 px-6 py-4 sticky top-0 z-50">
@@ -84,7 +86,7 @@ const NavbarDash = () => {
                   onClick={() => setIsDropdownOpen(false)}
                 >
                   <LogOut className="w-4 h-4 mr-2 text-slate-600" />
-                  <span className="text-sm text-slate-700">Log out</span>
+                  <button onClick={uselogout}><span className="text-sm text-slate-700">Log out</span></button> 
                 </div>
               </div>
             )}

@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from "../compounts/Navbar";
 import { useState } from 'react';
 
 const Login = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     email: '',
     password: ''
@@ -32,6 +33,13 @@ const Login = () => {
 
       const data = await res.json();
       console.log("Login success:", data);
+
+      if (res.ok ) {
+        // ✅ Registration success → redirect to dashboard
+        navigate('/dashboard');
+      } else {
+        alert( "Login failed");
+      }
       // redirect or update state
     } catch (error) {
       console.error(error.message);
