@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import NotFound from './pages/NOTFOUND';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import Projects from './pages/Projects';
 import {  Routes, Route } from "react-router-dom";
 
 
@@ -26,6 +27,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path='/profile' element={<Profile/>} />
+          <Route path='/project' element={<Projects/>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

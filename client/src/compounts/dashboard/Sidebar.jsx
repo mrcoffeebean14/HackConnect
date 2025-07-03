@@ -21,7 +21,7 @@ const Sidebar = ({ sidebarCollapsed, setSidebarCollapsed, activeSection, setActi
   const sidebarItems = [
     { icon: Home, label: 'Home',path:"/dashboard" },
     { icon: UserCircle, label: 'My Profile', path: '/profile' }, // 👈 added path
-    { icon: FolderOpen, label: 'My Projects' },
+    { icon: FolderOpen, label: 'My Projects',path:'/project'},
     { icon: Users, label: 'Team Matching' },
     { icon: MessageSquare, label: 'Messages' },
     { icon: Bell, label: 'Notifications' },

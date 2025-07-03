@@ -157,14 +157,13 @@ const Profile = () => {
   return (
     <>
       <NavbarDash />
-      <div className="flex min-h-screen">
+      <div className="flex ">
         <Sidebar
           sidebarCollapsed={sidebarCollapsed}
           setSidebarCollapsed={setSidebarCollapsed}
           activeSection={activeSection}
           setActiveSection={setActiveSection}
         />
-
         <div className="flex-1 bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 overflow-y-auto">
           <div className="max-w-5xl mx-auto px-4 py-8">
             <div className="mb-8">
