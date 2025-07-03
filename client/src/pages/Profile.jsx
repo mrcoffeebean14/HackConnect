@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '../hooks/use-toast';
 import ProfileHeader from '../compounts/profile/ProfileHeader';
 import SkillsSection from '../compounts/profile/SkillsSection';
@@ -6,7 +6,7 @@ import SocialLinksSection from '../compounts/profile/SocialLinksSection';
 import InterestsSection from '../compounts/profile/InterestsSection';
 import ProfileActions from '../compounts/profile/ProfileActions';
 import NavbarDash from '../compounts/dashboard/NavbarDash';
-import Footer from '../compounts/Footer';
+import Footer from '../compounts/home/Footer';
 import Sidebar from '../compounts/dashboard/Sidebar';
 
 const Profile = () => {
@@ -17,7 +17,7 @@ const Profile = () => {
   const [activeSection, setActiveSection] = useState('My Profile');
 
   const [profileData, setProfileData] = useState({
-    name: '',
+    username: '',
     bio: '',
     location: '',
     profilePicture: null,
@@ -36,24 +36,13 @@ const Profile = () => {
   useEffect(() => {
     const loadProfile = async () => {
       try {
-        const mockData = {
-          name: 'John Doe',
-          bio: 'Full-stack developer passionate about hackathons and building innovative solutions.',
-          location: 'San Francisco, CA',
-          profilePicture: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-          skills: ['React', 'Node.js', 'Python', 'Machine Learning', 'UI/UX Design'],
-          interests: 'AI, Web3, Sustainability, Gaming',
-          socials: {
-            github: 'https://github.com/johndoe',
-            linkedin: 'https://linkedin.com/in/johndoe',
-            twitter: 'https://twitter.com/johndoe',
-            website: 'https://johndoe.dev'
-          }
-        };
-
-        setProfileData(mockData);
-        setOriginalData(mockData);
-        setLoading(false);
+        const res = await fetch('http://localhost:5000/dashboard/profile', {
+          credentials: 'include'
+        });
+        if (!res.ok) throw new Error('Failed to fetch profile');
+        const data = await res.json();
+        setProfileData(data);
+        setOriginalData(data);
       } catch (error) {
         console.error('Error loading profile:', error);
         toast({
@@ -61,6 +50,7 @@ const Profile = () => {
           description: 'Failed to load profile data.',
           variant: 'destructive'
         });
+      } finally {
         setLoading(false);
       }
     };
@@ -86,7 +76,7 @@ const Profile = () => {
   };
 
   const handleSave = async () => {
-    if (!profileData.name.trim()) {
+    if (!profileData.username.trim()) {
       toast({
         title: 'Validation Error',
         description: 'Name is required.',
@@ -115,7 +105,17 @@ const Profile = () => {
 
     setSaving(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const res = await fetch('http://localhost:5000/dashboard/profile', {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        credentials: 'include',
+        body: JSON.stringify(profileData)
+      });
+      const data = await res.json();
+      console.log(data);
+      if (!res.ok) {
+        throw new Error('Failed to save profile');
+      }
       setOriginalData(profileData);
       toast({
         title: 'Success!',
@@ -158,7 +158,6 @@ const Profile = () => {
     <>
       <NavbarDash />
       <div className="flex min-h-screen">
-        {/* Sidebar */}
         <Sidebar
           sidebarCollapsed={sidebarCollapsed}
           setSidebarCollapsed={setSidebarCollapsed}
@@ -166,7 +165,6 @@ const Profile = () => {
           setActiveSection={setActiveSection}
         />
 
-        {/* Main Profile Content */}
         <div className="flex-1 bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 overflow-y-auto">
           <div className="max-w-5xl mx-auto px-4 py-8">
             <div className="mb-8">

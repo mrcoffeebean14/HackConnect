@@ -7,25 +7,63 @@ const router = express.Router({ mergeParams: true });
 // REGISTER ROUTE (keep this unchanged if already working)
 router.post('/register', async (req, res, next) => {
   try {
-    console.log(req.body)
-    const { username,email, password } = req.body;
-    const user = new User({ email,username });
+    console.log('Incoming register body:', req.body);
 
+    const { username, email, password } = req.body;
+
+    // Optional fields — fallback to safe defaults if not sent
+    const bio = '';
+    const location = '';
+    const profilePicture = '';
+    const skills = [];
+    const interests = '';
+
+    const socials = {
+      github:'',
+      linkedin: '',
+      twitter: '',
+      website: ''
+    };
+
+    // Create the user document with all schema fields
+    const user = new User({
+      email,
+      username,
+      bio,
+      location,
+      profilePicture,
+      skills,
+      interests,
+      socials
+    });
+
+    // Register with passport-local-mongoose
     const registeredUser = await User.register(user, password);
+
+    // Log the user in
     req.login(registeredUser, (err) => {
       if (err) return next(err);
+
       res.status(201).json({
         success: true,
-        message: 'User registered',
+        message: 'User registered successfully',
         user: {
           id: registeredUser._id,
           email: registeredUser.email,
-          username:registeredUser.username
+          username: registeredUser.username,
+          bio: registeredUser.bio,
+          location: registeredUser.location,
+          profilePicture: registeredUser.profilePicture,
+          skills: registeredUser.skills,
+          interests: registeredUser.interests,
+          socials: registeredUser.socials
         }
       });
     });
-  } catch (e) {
-    res.status(400).json({ success: false, message: e.message });
+
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ success: false, message: error.message });
   }
 });
 
@@ -60,18 +98,5 @@ router.post('/logout', (req, res) => {
     });
   });
 });
-
-router.get('/dashboard', (req, res) => {
-  if (req.isAuthenticated()) {
-    res.json({
-      id: req.user._id,
-      name: req.user.username,
-      email: req.user.email
-    });
-  } else {
-    res.status(401).json({ error: 'Not authenticated' });
-  }
-});
-
 
 export default router;

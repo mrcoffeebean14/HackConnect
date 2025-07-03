@@ -1,7 +1,7 @@
-import WelcomeSection from './dashboard/WelcomeSection'
-import QuickStats from './dashboard/QuickStats';
-import SuggestedTeammates from './dashboard/SuggestedTeammates';
-import RecentActivity from './dashboard/RecentActivity';
+import WelcomeSection from './WelcomeSection'
+import QuickStats from './QuickStats';
+import SuggestedTeammates from './SuggestedTeammates';
+import RecentActivity from './RecentActivity';
 
 const DashboardContent = () => {
   return (

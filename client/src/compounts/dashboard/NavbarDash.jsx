@@ -8,7 +8,7 @@ import {
   UserCircle,
 } from 'lucide-react';
 import { useState } from 'react';
-import useLogout from '../useLogout';
+import useLogout from '../../hooks/useLogout';
 
 const NavbarDash = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

@@ -10,7 +10,6 @@ import { Camera, MapPin, User } from 'lucide-react';
 
 const ProfileHeader = ({ profileData, updateProfileData }) => {
   const [imagePreview, setImagePreview] = useState(null);
-
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -41,11 +40,11 @@ const ProfileHeader = ({ profileData, updateProfileData }) => {
             <Avatar className="w-32 h-32 mx-auto mb-4">
               <AvatarImage 
                 src={imagePreview || profileData.profilePicture} 
-                alt={profileData.name}
+                alt={profileData.username}
                 className="object-cover"
               />
               <AvatarFallback className="text-2xl bg-gradient-to-br from-blue-500 to-purple-500 text-white">
-                {profileData.name ? getInitials(profileData.name) : <User className="w-8 h-8" />}
+                {profileData.username ? getInitials(profileData.username) : <User className="w-8 h-8" />}
               </AvatarFallback>
             </Avatar>
             
@@ -78,8 +77,8 @@ const ProfileHeader = ({ profileData, updateProfileData }) => {
             </Label>
             <Input
               id="name"
-              value={profileData.name}
-              onChange={(e) => updateProfileData('name', e.target.value)}
+              value={profileData.username}
+              onChange={(e) => updateProfileData('username', e.target.value)}
               placeholder="Enter your full name"
               className="mt-1"
             />

@@ -8,6 +8,7 @@ import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import User from './models/user.js';
 import userRouter from './routes/userRouter.js';
+import dashboardRouter from './routes/dashboard.js'
 
 dotenv.config();
 
@@ -55,6 +56,7 @@ app.get('/',(req,res) => {
   res.send("api Running")
 })
 app.use('/', userRouter);
+app.use('/dashboard',dashboardRouter)
 
 
 

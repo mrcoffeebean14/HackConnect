@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import Navbar from "../compounts/Navbar"
+import Navbar from "../compounts/home/Navbar"
 import { useState } from 'react';
 
 const Register = () => {

@@ -12,7 +12,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import useLogout from '../useLogout';
+import useLogout from '../../hooks/useLogout';
 
 const Sidebar = ({ sidebarCollapsed, setSidebarCollapsed, activeSection, setActiveSection }) => {
   const navigate = useNavigate();

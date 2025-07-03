@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import NavbarDash from '../compounts/dashboard/NavbarDash';
 import Sidebar from '../compounts/dashboard/Sidebar';
-import DashboardContent from '../compounts/DashboardContent'
-import Footer from '../compounts/Footer';
+import DashboardContent from '../compounts/dashboard/DashboardContent'
+import Footer from '../compounts/home/Footer';
 const Dashboard = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeSection, setActiveSection] = useState('Home');
