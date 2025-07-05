@@ -20,6 +20,7 @@ const ProjectSchema = new mongoose.Schema({
 // User schema with projects
 const UserSchema = new mongoose.Schema({
   googleId: { type: String, unique: true, sparse: true },
+  githubId: { type: String, unique: true, sparse: true },
   email: { type: String, required: true, unique: true },
   username: { type: String, required: true },
   bio: { type: String, default: "" },

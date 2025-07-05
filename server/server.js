@@ -8,6 +8,7 @@ import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import GoogleStrategy from 'passport-google-oauth20';
+import GitHubStrategy from 'passport-github2';
 import User from './models/user.js';
 import userRouter from './routes/userRouter.js';
 import dashboardRouter from './routes/dashboard.js';
@@ -101,6 +102,62 @@ app.get('/auth/google/callback',
   passport.authenticate('google', {
     failureRedirect: 'http://localhost:5173/login',
     session: true,
+  }),
+  (req, res) => {
+    res.redirect('http://localhost:5173/dashboard');
+  }
+);
+
+// GitHub OAuth Strategy
+passport.use(new GitHubStrategy({
+  clientID: process.env.GITHUB_CLIENT_ID,
+  clientSecret: process.env.GITHUB_CLIENT_SECRET,
+  callbackURL: 'http://localhost:5000/auth/github/callback',
+  scope: ['user:email']
+}, async (accessToken, refreshToken, profile, done) => {
+  try {
+    // Try to find user by githubId
+    let user = await User.findOne({ githubId: profile.id });
+    if (!user) {
+      // Try to find by email (GitHub may return multiple emails)
+      const email = profile.emails && profile.emails[0] && profile.emails[0].value;
+      if (email) {
+        user = await User.findOne({ email });
+        if (user) {
+          user.githubId = profile.id;
+          await user.save();
+        }
+      }
+      if (!user) {
+        user = await User.create({
+          githubId: profile.id,
+          email: email || '',
+          username: profile.username || profile.displayName || 'GitHubUser',
+          bio: '',
+          location: '',
+          profilePicture: profile.photos?.[0]?.value || '',
+          skills: [],
+          interests: '',
+          socials: {},
+          projects: [],
+        });
+      }
+    }
+    return done(null, user);
+  } catch (err) {
+    return done(err, null);
+  }
+}));
+
+// GitHub Auth Routes
+app.get('/auth/github',
+  passport.authenticate('github', { scope: ['user:email'] })
+);
+
+app.get('/auth/github/callback',
+  passport.authenticate('github', {
+    failureRedirect: 'http://localhost:5173/login',
+    session: true
   }),
   (req, res) => {
     res.redirect('http://localhost:5173/dashboard');
