@@ -28,8 +28,8 @@ const EditProjectModal = ({ open, onClose, project, onSubmit }) => {
         techStack: project.techStack || [],
         githubLink: project.githubLink || '',
         liveLink: project.liveLink || '',
-        image: project.image || '',
-        status: project.status || ''
+        image: project.imageUrl || '', // Use imageUrl from backend
+        status: project.status || 'unknown'
       });
     }
   }, [project]);

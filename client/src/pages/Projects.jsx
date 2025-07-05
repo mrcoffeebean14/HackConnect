@@ -124,9 +124,13 @@ const Projects = () => {
         body: JSON.stringify(projectData),
       });
 
-      if (!response.ok) throw new Error("Failed to add project");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to add project");
+      }
 
       const newProject = await response.json();
+      console.log("New project received:", newProject); // Debug log
 
       setProjects((prev) => [newProject, ...prev]);
       setShowAddModal(false);
@@ -138,7 +142,7 @@ const Projects = () => {
       console.error("Error adding project:", error);
       toast({
         title: "Error",
-        description: "Failed to add project",
+        description: error.message || "Failed to add project",
         variant: "destructive",
       });
     }

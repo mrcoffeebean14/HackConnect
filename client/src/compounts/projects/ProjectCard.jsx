@@ -12,7 +12,7 @@ const ProjectCard = ({ project, onEdit, onDelete, onViewDetails }) => {
     techStack = [],
     githubLink,
     liveLink,
-    image,
+    imageUrl,
     status = 'unknown',
   } = project;
 
@@ -34,7 +34,7 @@ const ProjectCard = ({ project, onEdit, onDelete, onViewDetails }) => {
       <CardHeader className="p-0">
         <div className="relative overflow-hidden rounded-t-lg">
           <img
-            src={image || '/api/placeholder/300/200'}
+            src={imageUrl || '/api/placeholder/300/200'}
             alt={title}
             className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
           />

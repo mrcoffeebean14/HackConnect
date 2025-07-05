@@ -8,13 +8,20 @@ import {
   getAllProjects
 } from "../config/Project Controllers.js";
 
+// Authentication middleware
+const isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: "Not authenticated" });
+};
+
 // Example Express routes
 
 // GET profile
-router.get('/profile', async (req, res) => {
+router.get('/profile', isAuthenticated, async (req, res) => {
   try {
-    const userId = req.user?._id; // Passport.js session user
-    if (!userId) {return res.status(401).json({ error: 'Not authenticated' });}
+    const userId = req.user._id; // Passport.js session user
     const user = await User.findById(userId).lean();
     if (!user) {return res.status(404).json({ error: 'User not found' });}
     // 🛡️ Safe fallback shape
@@ -40,10 +47,9 @@ router.get('/profile', async (req, res) => {
 });
 
 // PUT profile
-router.put('/profile', async (req, res) => {
+router.put('/profile', isAuthenticated, async (req, res) => {
   try {
-    const userId = req.user?._id;
-    if (!userId) return res.status(401).json({ error: 'Not authenticated' });
+    const userId = req.user._id;
     const { username, bio, location, profilePicture, skills, interests, socials } = req.body;
     console.log(req.body)
     const updated = await User.findByIdAndUpdate(
@@ -73,16 +79,16 @@ router.put('/profile', async (req, res) => {
 
 
 // GET all projects for a user
-router.get("/projects", getAllProjects);
+router.get("/projects", isAuthenticated, getAllProjects);
 
 // ADD new project
-router.post("/projects", addProject);
+router.post("/projects", isAuthenticated, addProject);
 
 // UPDATE a project
-router.put("/projects/:projectId", updateProject);
+router.put("/projects/:projectId", isAuthenticated, updateProject);
 
 // DELETE a project
-router.delete("/projects/:projectId", deleteProject);
+router.delete("/projects/:projectId", isAuthenticated, deleteProject);
 
 
 

@@ -36,7 +36,8 @@ const AddProjectModal = ({ open, onClose, onSubmit }) => {
         techStack: [],
         githubLink: '',
         liveLink: '',
-        image: ''
+        image: '',
+        status: 'unknown'
       });
       setCurrentTech('');
     } catch (error) {

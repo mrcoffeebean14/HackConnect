@@ -8,7 +8,7 @@ import { Github, ExternalLink, Calendar, Tag } from 'lucide-react';
 const ProjectDetailsModal = ({ open, onClose, project }) => {
   if (!project) return null;
 
-  const { title, description, techStack, githubLink, liveLink, image, createdAt, status } = project;
+  const { title, description, techStack, githubLink, liveLink, imageUrl, createdAt, status } = project;
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -42,10 +42,10 @@ const ProjectDetailsModal = ({ open, onClose, project }) => {
 
         <div className="space-y-6">
           {/* Project Image */}
-          {image && (
+          {imageUrl && (
             <div className="relative overflow-hidden rounded-lg">
               <img
-                src={image}
+                src={imageUrl}
                 alt={title}
                 className="w-full h-64 object-cover"
               />

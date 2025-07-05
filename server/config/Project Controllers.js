@@ -4,7 +4,7 @@ import User from "../models/user.js";
 // Get all projects for a user
 export const getAllProjects = async (req, res) => {
   try {
-    const userId = req.user?._id;
+    const userId = req.user._id; // req.user is guaranteed to exist due to auth middleware
     const user = await User.findById(userId).select("projects");
     if (!user) return res.status(404).json({ message: "User not found" });
     res.json(user.projects);
@@ -16,26 +16,35 @@ export const getAllProjects = async (req, res) => {
 // Add a new project
 export const addProject = async (req, res) => {
   try {
-    const { title, description, techStack, githubLink, liveLink, image,status } =
+    const { title, description, techStack, githubLink, liveLink, image, status } =
       req.body;
-    console.log(req.body);
-    const userId = req.user?._id;
+    console.log("Received project data:", req.body);
+    const userId = req.user._id; // req.user is guaranteed to exist due to auth middleware
+    console.log("User ID:", userId);
+    
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    user.projects.push({
+    const newProject = {
       title,
       description,
       techStack,
       githubLink,
       liveLink,
-      image,
+      imageUrl: image, // Map 'image' to 'imageUrl' to match schema
       status,
-    });
+    };
 
+    console.log("Creating project:", newProject);
+    user.projects.push(newProject);
     await user.save();
-    res.status(201).json({ message: "Project added", projects: user.projects });
+    
+    // Return the newly created project (last one in the array)
+    const createdProject = user.projects[user.projects.length - 1];
+    console.log("Created project:", createdProject);
+    res.status(201).json(createdProject);
   } catch (err) {
+    console.error("Error in addProject:", err);
     res.status(500).json({ message: err.message });
   }
 };
@@ -46,7 +55,7 @@ export const updateProject = async (req, res) => {
     const { projectId } = req.params;
     const { title, description, techStack, githubLink, liveLink, image, status } =
       req.body;
-    const userId = req.user?._id;
+    const userId = req.user._id; // req.user is guaranteed to exist due to auth middleware
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -58,10 +67,10 @@ export const updateProject = async (req, res) => {
     project.techStack = techStack || project.techStack;
     project.githubLink = githubLink || project.githubLink;
     project.liveLink = liveLink || project.liveLink;
-    project.image = image || project.image;
+    project.imageUrl = image || project.imageUrl; // Map 'image' to 'imageUrl'
     project.status = status || project.status;
     await user.save();
-    res.json({ message: "Project updated", project });
+    res.json(project); // Return just the updated project
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -74,7 +83,7 @@ import mongoose from "mongoose";
 export const deleteProject = async (req, res) => {
   try {
     const { projectId } = req.params;
-    const userId = req.user?._id;
+    const userId = req.user._id; // req.user is guaranteed to exist due to auth middleware
 
     if (!mongoose.Types.ObjectId.isValid(projectId)) {
       return res.status(400).json({ message: "Invalid project ID" });
