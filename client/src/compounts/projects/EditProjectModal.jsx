@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
@@ -81,9 +81,11 @@ const EditProjectModal = ({ open, onClose, project, onSubmit }) => {
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto bg-white">
         <DialogHeader>
           <DialogTitle className="text-2xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Edit Project
+            Add New Project
           </DialogTitle>
-          
+          <DialogDescription className="text-sm text-slate-600">
+            Fill in the project details to showcase your work.
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
