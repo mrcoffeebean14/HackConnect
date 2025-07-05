@@ -1,8 +1,6 @@
-
-import React from 'react';
 import ProjectCard from './ProjectCard';
 
-const ProjectsList = ({ projects, loading, onEdit, onDelete, onViewDetails }) => {
+const ProjectsList = ({ projects = [], loading, onEdit, onDelete, onViewDetails }) => {
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -28,7 +26,7 @@ const ProjectsList = ({ projects, loading, onEdit, onDelete, onViewDetails }) =>
     );
   }
 
-  if (projects.length === 0) {
+  if (!projects.length) {
     return (
       <div className="text-center py-16">
         <div className="w-24 h-24 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -46,10 +44,10 @@ const ProjectsList = ({ projects, loading, onEdit, onDelete, onViewDetails }) =>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {projects.map((project) => (
         <ProjectCard
-          key={project.id}
+          key={project._id}
           project={project}
           onEdit={() => onEdit(project)}
-          onDelete={() => onDelete(project.id)}
+          onDelete={() => onDelete(project._id)}
           onViewDetails={() => onViewDetails(project)}
         />
       ))}

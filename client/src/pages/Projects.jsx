@@ -65,31 +65,31 @@ const Projects = () => {
   ];
 
   useEffect(() => {
-    // Simulate API call
     const fetchProjects = async () => {
       setLoading(true);
       try {
-        // Replace with actual API call
-        // const response = await fetch('/api/dashboard/projects');
-        // const data = await response.json();
-        setTimeout(() => {
-          setProjects(mockProjects);
-          setFilteredProjects(mockProjects);
-          setLoading(false);
-        }, 1000);
+        const response = await fetch("http://localhost:5000/dashboard/projects", {
+          credentials: "include", // send cookies if using sessions
+        });
+        if (!response.ok) throw new Error("Failed to fetch");
+        const data = await response.json();
+        setProjects(data);
+        setFilteredProjects(data);
       } catch (error) {
-        console.error('Error fetching projects:', error);
+        console.error("Error fetching projects:", error);
         toast({
           title: "Error",
           description: "Failed to load projects",
           variant: "destructive",
         });
+      } finally {
         setLoading(false);
       }
     };
 
     fetchProjects();
   }, [toast]);
+
 
   useEffect(() => {
     let filtered = projects.filter(project =>
@@ -117,28 +117,25 @@ const Projects = () => {
 
   const handleAddProject = async (projectData) => {
     try {
-      // Replace with actual API call
-      // const response = await fetch('/api/dashboard/projects', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(projectData)
-      // });
+      const response = await fetch("http://localhost:5000/dashboard/projects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(projectData),
+      });
 
-      const newProject = {
-        ...projectData,
-        id: Date.now(),
-        createdAt: new Date().toISOString().split('T')[0],
-        status: 'in-progress'
-      };
+      if (!response.ok) throw new Error("Failed to add project");
 
-      setProjects(prev => [newProject, ...prev]);
+      const newProject = await response.json();
+
+      setProjects((prev) => [newProject, ...prev]);
       setShowAddModal(false);
       toast({
         title: "Success",
         description: "Project added successfully!",
       });
     } catch (error) {
-      console.error('Error adding project:', error);
+      console.error("Error adding project:", error);
       toast({
         title: "Error",
         description: "Failed to add project",
@@ -149,16 +146,20 @@ const Projects = () => {
 
   const handleEditProject = async (projectData) => {
     try {
-      // Replace with actual API call
-      // await fetch(`/api/dashboard/projects/${selectedProject.id}`, {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(projectData)
-      // });
+      const response = await fetch(`http://localhost:5000/dashboard/projects/${selectedProject._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(projectData),
+      });
 
-      setProjects(prev => prev.map(p =>
-        p.id === selectedProject.id ? { ...p, ...projectData } : p
-      ));
+      if (!response.ok) throw new Error("Failed to update project");
+
+      const updatedProject = await response.json();
+
+      setProjects((prev) =>
+        prev.map((p) => (p._id === selectedProject._id ? updatedProject : p))
+      );
       setShowEditModal(false);
       setSelectedProject(null);
       toast({
@@ -166,7 +167,7 @@ const Projects = () => {
         description: "Project updated successfully!",
       });
     } catch (error) {
-      console.error('Error updating project:', error);
+      console.error("Error updating project:", error);
       toast({
         title: "Error",
         description: "Failed to update project",
@@ -175,14 +176,17 @@ const Projects = () => {
     }
   };
 
+
   const handleDeleteProject = async () => {
     try {
-      // Replace with actual API call
-      // await fetch(`/api/dashboard/projects/${projectToDelete}`, {
-      //   method: 'DELETE'
-      // });
+      const response = await fetch(`http://localhost:5000/dashboard/projects/${projectToDelete}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
 
-      setProjects(prev => prev.filter(p => p.id !== projectToDelete));
+      if (!response.ok) throw new Error("Failed to delete project");
+
+      setProjects((prev) => prev.filter((p) => p._id !== projectToDelete));
       setShowDeleteDialog(false);
       setProjectToDelete(null);
       toast({
@@ -190,9 +194,9 @@ const Projects = () => {
         description: "Project deleted successfully!",
       });
     } catch (error) {
-      console.error('Error deleting project:', error);
+      console.error("Error deleting project:", error);
       toast({
-        title: "Error",
+        title: "Error ",
         description: "Failed to delete project",
         variant: "destructive",
       });

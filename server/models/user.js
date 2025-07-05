@@ -1,9 +1,26 @@
 import mongoose from "mongoose";
 import passportLocalMongoose from "passport-local-mongoose";
 
+// Reusable embedded Project schema
+const ProjectSchema = new mongoose.Schema({
+  title: { type: String, required: true, trim: true },
+  description: { type: String, trim: true },
+  techStack: [{ type: String, default: [] }],
+  githubLink: { type: String, default: "", trim: true },
+  liveLink: { type: String, default: "", trim: true },
+  imageUrl: { type: String, default: "", trim: true },
+  status: {
+    type: String,
+    enum: ['completed', 'in-progress', 'on-hold', 'unknown'],
+    default: 'unknown',
+  },
+  createdAt: { type: Date, default: Date.now }
+});
+
+// User schema with projects
 const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
-  username: { type: String, required: true }, // used by passport-local-mongoose, but your `username` field can be the same as name or email if you want
+  username: { type: String, required: true },
   bio: { type: String, default: "" },
   location: { type: String, default: "" },
   profilePicture: { type: String, default: "" },
@@ -15,6 +32,7 @@ const UserSchema = new mongoose.Schema({
     twitter: { type: String, default: "" },
     website: { type: String, default: "" },
   },
+  projects: [ProjectSchema]
 });
 
 // Use email as the login field instead of username

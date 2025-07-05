@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -6,7 +5,16 @@ import { Card, CardContent, CardHeader } from '../ui/card';
 import { Github, ExternalLink, Edit, Trash2, Eye } from 'lucide-react';
 
 const ProjectCard = ({ project, onEdit, onDelete, onViewDetails }) => {
-  const { title, description, techStack, githubLink, liveLink, image, status } = project;
+  // Provide default fallback values to avoid runtime errors
+  const {
+    title = 'Untitled Project',
+    description = 'No description available.',
+    techStack = [],
+    githubLink,
+    liveLink,
+    image,
+    status = 'unknown',
+  } = project;
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -32,12 +40,12 @@ const ProjectCard = ({ project, onEdit, onDelete, onViewDetails }) => {
           />
           <div className="absolute top-4 right-4">
             <Badge className={`${getStatusColor(status)} capitalize`}>
-              {status.replace('-', ' ')}
+              {status?.replace('-', ' ')}
             </Badge>
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent className="p-6">
         <div className="space-y-4">
           <div>
@@ -51,8 +59,8 @@ const ProjectCard = ({ project, onEdit, onDelete, onViewDetails }) => {
 
           {/* Tech Stack */}
           <div className="flex flex-wrap gap-2">
-            {techStack.slice(0, 3).map((tech, index) => (
-              <Badge key={index} variant="secondary" className="text-xs">
+            {techStack.slice(0, 3).map((tech) => (
+              <Badge key={tech} variant="secondary" className="text-xs">
                 {tech}
               </Badge>
             ))}

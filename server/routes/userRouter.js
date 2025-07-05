@@ -24,6 +24,7 @@ router.post('/register', async (req, res, next) => {
       twitter: '',
       website: ''
     };
+    const Projects = [];
 
     // Create the user document with all schema fields
     const user = new User({
@@ -34,7 +35,8 @@ router.post('/register', async (req, res, next) => {
       profilePicture,
       skills,
       interests,
-      socials
+      socials,
+      Projects
     });
 
     // Register with passport-local-mongoose
@@ -56,7 +58,8 @@ router.post('/register', async (req, res, next) => {
           profilePicture: registeredUser.profilePicture,
           skills: registeredUser.skills,
           interests: registeredUser.interests,
-          socials: registeredUser.socials
+          socials: registeredUser.socials,
+          Projects : registeredUser.Projects
         }
       });
     });

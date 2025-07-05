@@ -1,6 +1,12 @@
 import express from 'express';
 const router = express.Router();
 import User from '../models/user.js';
+import {
+  addProject,
+  updateProject,
+  deleteProject,
+  getAllProjects
+} from "../config/Project Controllers.js";
 
 // Example Express routes
 
@@ -39,6 +45,7 @@ router.put('/profile', async (req, res) => {
     const userId = req.user?._id;
     if (!userId) return res.status(401).json({ error: 'Not authenticated' });
     const { username, bio, location, profilePicture, skills, interests, socials } = req.body;
+    console.log(req.body)
     const updated = await User.findByIdAndUpdate(
       userId,
       {
@@ -63,6 +70,19 @@ router.put('/profile', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+
+// GET all projects for a user
+router.get("/projects", getAllProjects);
+
+// ADD new project
+router.post("/projects", addProject);
+
+// UPDATE a project
+router.put("/projects/:projectId", updateProject);
+
+// DELETE a project
+router.delete("/projects/:projectId", deleteProject);
 
 
 

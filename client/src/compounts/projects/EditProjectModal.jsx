@@ -14,7 +14,8 @@ const EditProjectModal = ({ open, onClose, project, onSubmit }) => {
     techStack: [],
     githubLink: '',
     liveLink: '',
-    image: ''
+    image: '',
+    status: 'unknown' // <-- add this line
   });
   const [currentTech, setCurrentTech] = useState('');
   const [loading, setLoading] = useState(false);
@@ -27,7 +28,8 @@ const EditProjectModal = ({ open, onClose, project, onSubmit }) => {
         techStack: project.techStack || [],
         githubLink: project.githubLink || '',
         liveLink: project.liveLink || '',
-        image: project.image || ''
+        image: project.image || '',
+        status: project.status || ''
       });
     }
   }, [project]);
@@ -81,6 +83,7 @@ const EditProjectModal = ({ open, onClose, project, onSubmit }) => {
           <DialogTitle className="text-2xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Edit Project
           </DialogTitle>
+          
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -143,6 +146,23 @@ const EditProjectModal = ({ open, onClose, project, onSubmit }) => {
               ))}
             </div>
           </div>
+          {/* Status */}
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Status
+            </label>
+            <select
+              value={formData.status}
+              onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value }))}
+              className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="completed">Completed</option>
+              <option value="in-progress">In Progress</option>
+              <option value="on-hold">On Hold</option>
+              <option value="unknown">Unknown</option>
+            </select>
+          </div>
+
 
           {/* Links */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
