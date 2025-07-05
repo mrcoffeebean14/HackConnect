@@ -7,14 +7,14 @@ import {
   deleteProject,
   getAllProjects
 } from "../config/Project Controllers.js";
-
+import isAuthenticated from '../middleware/isAuthticated.js';
 // Authentication middleware
-const isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.status(401).json({ message: "Not authenticated" });
-};
+// const isAuthenticated = (req, res, next) => {
+//   if (req.isAuthenticated()) {
+//     return next();
+//   }
+//   res.status(401).json({ message: "Not authenticated" });
+// };
 
 // Example Express routes
 
