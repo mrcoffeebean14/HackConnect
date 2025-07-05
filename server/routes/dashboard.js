@@ -9,15 +9,20 @@ import {
 } from "../config/Project Controllers.js";
 import isAuthenticated from '../middleware/isAuthticated.js';
 
-// Example Express routes
-
-// GET profile
+// GET /dashboard/profile - fetch logged-in user's profile
 router.get('/profile', isAuthenticated, async (req, res) => {
   try {
-    const userId = req.user._id; // Passport.js session user
-    const user = await User.findById(userId).lean();
-    if (!user) {return res.status(404).json({ error: 'User not found' });}
-    // 🛡️ Safe fallback shape
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const userId = req.user._id;
+    const user = await User.findById(userId).select('-hash -salt').lean();
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
     const safeProfile = {
       username: user.username || '',
       bio: user.bio || '',
@@ -32,6 +37,7 @@ router.get('/profile', isAuthenticated, async (req, res) => {
         website: user.socials?.website || ''
       }
     };
+
     res.json(safeProfile);
   } catch (err) {
     console.error(err);
@@ -39,12 +45,24 @@ router.get('/profile', isAuthenticated, async (req, res) => {
   }
 });
 
-// PUT profile
+// PUT /dashboard/profile - update profile info
 router.put('/profile', isAuthenticated, async (req, res) => {
   try {
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
     const userId = req.user._id;
-    const { username, bio, location, profilePicture, skills, interests, socials } = req.body;
-    console.log(req.body)
+    const {
+      username,
+      bio,
+      location,
+      profilePicture,
+      skills,
+      interests,
+      socials
+    } = req.body;
+
     const updated = await User.findByIdAndUpdate(
       userId,
       {
@@ -62,27 +80,40 @@ router.put('/profile', isAuthenticated, async (req, res) => {
         }
       },
       { new: true }
-    ).lean();
-    res.json(updated);
+    ).select('-hash -salt').lean();
+
+    const safeProfile = {
+      username: updated.username || '',
+      bio: updated.bio || '',
+      location: updated.location || '',
+      profilePicture: updated.profilePicture || null,
+      skills: Array.isArray(updated.skills) ? updated.skills : [],
+      interests: updated.interests || '',
+      socials: {
+        github: updated.socials?.github || '',
+        linkedin: updated.socials?.linkedin || '',
+        twitter: updated.socials?.twitter || '',
+        website: updated.socials?.website || ''
+      }
+    };
+
+    res.json(safeProfile);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
   }
 });
 
-
-// GET all projects for a user
+// GET /dashboard/projects - fetch all projects
 router.get("/projects", isAuthenticated, getAllProjects);
 
-// ADD new project
+// POST /dashboard/projects - add a new project
 router.post("/projects", isAuthenticated, addProject);
 
-// UPDATE a project
+// PUT /dashboard/projects/:projectId - update a specific project
 router.put("/projects/:projectId", isAuthenticated, updateProject);
 
-// DELETE a project
+// DELETE /dashboard/projects/:projectId - delete a project
 router.delete("/projects/:projectId", isAuthenticated, deleteProject);
-
-
 
 export default router;

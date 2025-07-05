@@ -9,8 +9,9 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import useLogout from '../../hooks/useLogout';
+import { Link } from 'react-router-dom';
 
-const NavbarDash = () => {
+const NavbarDash = ({ profilePicture }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const logout = useLogout();
 
@@ -58,7 +59,7 @@ const NavbarDash = () => {
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
               <img
-                src="/api/placeholder/32/32"
+                src={profilePicture || "/api/placeholder/32/32"}
                 alt="User"
                 className="h-full w-full object-cover"
               />
@@ -66,13 +67,14 @@ const NavbarDash = () => {
 
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-56 bg-white border border-slate-200 rounded-lg shadow-lg z-50">
-                <div
+                <Link
+                  to="/profile"
                   className="flex items-center px-4 py-2 hover:bg-slate-50 cursor-pointer"
                   onClick={() => setIsDropdownOpen(false)}
                 >
                   <User className="w-4 h-4 mr-2 text-slate-600" />
                   <span className="text-sm text-slate-700">Profile</span>
-                </div>
+                </Link>
                 <div
                   className="flex items-center px-4 py-2 hover:bg-slate-50 cursor-pointer"
                   onClick={() => setIsDropdownOpen(false)}
@@ -83,10 +85,10 @@ const NavbarDash = () => {
                 <hr className="border-slate-200 my-1" />
                 <div
                   className="flex items-center px-4 py-2 hover:bg-slate-50 cursor-pointer"
-                  onClick={() => setIsDropdownOpen(false)}
+                  onClick={() => { setIsDropdownOpen(false); logout(); }}
                 >
                   <LogOut className="w-4 h-4 mr-2 text-slate-600" />
-                  <button onClick={logout}><span className="text-sm text-slate-700">Log out</span></button> 
+                  <span className="text-sm text-slate-700">Log out</span>
                 </div>
               </div>
             )}

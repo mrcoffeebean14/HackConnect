@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useToast } from '../hooks/use-toast'; // Import the useToast hook
 import ProjectsList from '../compounts/projects/ProjectsList'; // Import the ProjectsList component
@@ -26,6 +25,7 @@ const Projects = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const { toast } = useToast();
+  const [profilePicture, setProfilePicture] = useState(null);
 
   // Mock data - replace with actual API calls
   const mockProjects = [
@@ -90,6 +90,14 @@ const Projects = () => {
     fetchProjects();
   }, [toast]);
 
+  useEffect(() => {
+    fetch('http://localhost:5000/dashboard/profile', {
+      credentials: 'include',
+    })
+      .then(res => res.json())
+      .then(data => setProfilePicture(data.profilePicture))
+      .catch(() => setProfilePicture(null));
+  }, []);
 
   useEffect(() => {
     let filtered = projects.filter(project =>
@@ -224,7 +232,7 @@ const Projects = () => {
 
   return (
     <>
-      <NavbarDash />
+      <NavbarDash profilePicture={profilePicture} />
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
         <div className="flex">
           <Sidebar

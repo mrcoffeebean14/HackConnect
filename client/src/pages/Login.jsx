@@ -111,9 +111,20 @@ const Login = () => {
               </button>
 
               <p className="text-center text-sm mt-4">
-                Don’t have an account? <Link to="/register" className="text-blue-600">Sign up</Link>
+                Don't have an account? <Link to="/register" className="text-blue-600">Sign up</Link>
               </p>
             </form>
+            <div className="mt-6 flex flex-col items-center">
+              <span className="text-gray-500 mb-2">or</span>
+              <a
+                href="http://localhost:5000/auth/google"
+                className="w-full flex items-center justify-center bg-white border border-gray-300 rounded-lg py-3 text-gray-700 hover:bg-gray-50 transition"
+                style={{ textDecoration: 'none' }}
+              >
+                <svg className="w-5 h-5 mr-2" viewBox="0 0 48 48"><g><path d="M44.5 20H24v8.5h11.7C34.1 33.7 29.6 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c2.7 0 5.2.9 7.2 2.4l6.4-6.4C34.3 5.1 29.4 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-7.5 20-21 0-1.3-.1-2.7-.5-4z" fill="#FFC107"/><path d="M6.3 14.7l7 5.1C15.5 17.1 19.4 15 24 15c2.7 0 5.2.9 7.2 2.4l6.4-6.4C34.3 5.1 29.4 3 24 3c-7.2 0-13.4 3.1-17.7 8.1z" fill="#FF3D00"/><path d="M24 45c5.4 0 10.3-1.8 14.1-4.9l-6.5-5.3C29.5 36.9 26.9 38 24 38c-5.5 0-10.1-3.5-11.8-8.3l-7 5.4C7.9 41.6 15.4 45 24 45z" fill="#4CAF50"/><path d="M44.5 20H24v8.5h11.7c-1.1 3.1-4.1 5.5-7.7 5.5-2.2 0-4.2-.7-5.7-2.1l-7 5.4C15.9 41.6 19.7 45 24 45c10.5 0 20-7.5 20-21 0-1.3-.1-2.7-.5-4z" fill="#1976D2"/></g></svg>
+                Login with Google
+              </a>
+            </div>
           </div>
         </div>
       </div>

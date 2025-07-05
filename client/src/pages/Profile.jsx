@@ -15,6 +15,7 @@ const Profile = () => {
   const [saving, setSaving] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeSection, setActiveSection] = useState('My Profile');
+  const [profilePicture, setProfilePicture] = useState(null);
 
   const [profileData, setProfileData] = useState({
     username: '',
@@ -43,6 +44,7 @@ const Profile = () => {
         const data = await res.json();
         setProfileData(data);
         setOriginalData(data);
+        setProfilePicture(data.profilePicture);
       } catch (error) {
         console.error('Error loading profile:', error);
         toast({
@@ -156,7 +158,7 @@ const Profile = () => {
 
   return (
     <>
-      <NavbarDash />
+      <NavbarDash profilePicture={profilePicture} />
       <div className="flex ">
         <Sidebar
           sidebarCollapsed={sidebarCollapsed}

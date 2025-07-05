@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../compounts/ui/tabs";
 import ProjectTeamsTab from '../compounts/team/teamproject/ProjectTeamsTab';
 import HackathonTeamsTab from '../compounts/team/Hackathon/HackathonTeamsTab';
@@ -9,15 +8,25 @@ import Footer from '../compounts/home/Footer';
 
 const TeamMatching = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-    const [activeSection, setActiveSection] = useState('Team Matching');
+  const [activeSection, setActiveSection] = useState('Team Matching');
+  const [profilePicture, setProfilePicture] = useState(null);
 
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
   };
 
+  useEffect(() => {
+    fetch('http://localhost:5000/dashboard/profile', {
+      credentials: 'include',
+    })
+      .then(res => res.json())
+      .then(data => setProfilePicture(data.profilePicture))
+      .catch(() => setProfilePicture(null));
+  }, []);
+
   return (
     <>
-      <NavbarDash />
+      <NavbarDash profilePicture={profilePicture} />
       <div className="flex">
           <Sidebar
             sidebarCollapsed={sidebarCollapsed}
