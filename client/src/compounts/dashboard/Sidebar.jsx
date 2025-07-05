@@ -22,7 +22,7 @@ const Sidebar = ({ sidebarCollapsed, setSidebarCollapsed, activeSection, setActi
     { icon: Home, label: 'Home',path:"/dashboard" },
     { icon: UserCircle, label: 'My Profile', path: '/profile' }, // 👈 added path
     { icon: FolderOpen, label: 'My Projects',path:'/project'},
-    { icon: Users, label: 'Team Matching' },
+    { icon: Users, label: 'Team Matching',path:'/team-matching' },
     { icon: MessageSquare, label: 'Messages' },
     { icon: Bell, label: 'Notifications' },
     { icon: Settings, label: 'Settings' },

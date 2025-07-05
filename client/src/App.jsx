@@ -8,7 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Projects from './pages/Projects';
 import {  Routes, Route } from "react-router-dom";
-
+import TeamMatching from './pages/TeamMatching';
 
 function App() {
   useEffect(() => {
@@ -28,6 +28,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path='/profile' element={<Profile/>} />
           <Route path='/project' element={<Projects/>} />
+          <Route path='/team-matching' element={<TeamMatching/>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
