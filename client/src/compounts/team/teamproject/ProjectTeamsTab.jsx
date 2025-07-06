@@ -4,7 +4,7 @@ import { Search, Plus, Code, Users, Star, ExternalLink } from 'lucide-react';
 import ProjectCard from './ProjectCard';
 import ProjectDetailsModal from './ProjectDetailsModal';
 import CreateProjectTeamModal from './CreateProjectTeamModal';
-import JoinRequestModal from './JoinRequestModal';
+import JoinRequestModal from '../JoinRequestModal';
 
 const ProjectTeamsTab = () => {
   const [searchTerm, setSearchTerm] = useState('');

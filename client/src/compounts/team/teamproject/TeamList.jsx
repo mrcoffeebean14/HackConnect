@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 import { Search, Filter, Plus, Users, Code, Star } from 'lucide-react';
 import TeamCard from './TeamCard';
-import TeamDetailsModal from './TeamDetailsModal';
-import CreateTeamModal from './CreateTeamModal';
-import JoinRequestModal from './JoinRequestModal';
+import TeamDetailsModal from '../TeamDetailsModal';
+import CreateTeamModal from '../CreateTeamModal';
+import JoinRequestModal from '../JoinRequestModal';
 
 const TeamList = () => {
   const [searchTerm, setSearchTerm] = useState('');

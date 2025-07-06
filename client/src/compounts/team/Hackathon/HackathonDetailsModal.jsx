@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 import { X, Calendar, MapPin, Trophy, Users, Plus, ExternalLink } from 'lucide-react';
 import TeamCard from '../teamproject/TeamCard';
-import CreateTeamModal from '../teamproject/CreateTeamModal';
-import TeamDetailsModal from '../teamproject/TeamDetailsModal';  
-import JoinRequestModal from '../teamproject/JoinRequestModal';
+import CreateTeamModal from '../CreateTeamModal';
+import TeamDetailsModal from '../TeamDetailsModal';  
+import JoinRequestModal from '../JoinRequestModal';
 
 const HackathonDetailsModal = ({ hackathon, onClose }) => {
   const [showCreateTeamModal, setShowCreateTeamModal] = useState(false);
