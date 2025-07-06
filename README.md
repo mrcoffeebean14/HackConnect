@@ -8,7 +8,7 @@
 
 ✅ **User Authentication**
 - Secure JWT auth
-- OAuth login with Google/GitHub/LinkedIn
+- OAuth login with Google/GitHub
 
 ✅ **Developer Profiles**
 - Skills, roles, GitHub portfolio
