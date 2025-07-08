@@ -7,7 +7,7 @@ import PostActionsMenu from './PostActionsMenu';
 
 const FeedPostCard = ({ post }) => {
   const [isLiked, setIsLiked] = useState(post.isLiked);
-  const [likesCount, setLikesCount] = useState(post.likes);
+  const [likesCount, setLikesCount] = useState(post.likes?.length || 0);
   const [showComments, setShowComments] = useState(false);
   const [showActionsMenu, setShowActionsMenu] = useState(false);
 
@@ -27,15 +27,15 @@ const FeedPostCard = ({ post }) => {
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           <Avatar className="w-10 h-10">
-            <AvatarImage src={post.user.avatar} alt={post.user.name} />
-            <AvatarFallback>{post.user.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+            <AvatarImage src={post.createdBy.profilePicture} alt={post.createdBy.username} />
+            <AvatarFallback>{post.createdBy.username.split(' ').map(n => n[0]).join('')}</AvatarFallback>
           </Avatar>
           <div>
-            <h4 className="font-semibold text-gray-900">{post.user.name}</h4>
-            <p className="text-sm text-gray-500">@{post.user.username} • {post.timestamp}</p>
+            <h4 className="font-semibold text-gray-900">{post.createdBy.username}</h4>
+            <p className="text-sm text-gray-500">@{post.createdBy.username} • {post.createdAt}</p>
           </div>
         </div>
-        
+
         <div className="relative">
           <button
             onClick={() => setShowActionsMenu(!showActionsMenu)}
@@ -44,9 +44,9 @@ const FeedPostCard = ({ post }) => {
             <MoreHorizontal size={16} className="text-gray-400" />
           </button>
           {showActionsMenu && (
-            <PostActionsMenu 
+            <PostActionsMenu
               onClose={() => setShowActionsMenu(false)}
-              isOwner={post.user.username === 'currentUser'} // Replace with actual logic
+              isOwner={post.createdBy.username === 'currentUser'} // Replace with actual logic
             />
           )}
         </div>
@@ -54,23 +54,34 @@ const FeedPostCard = ({ post }) => {
 
       {/* Content */}
       <div className="mb-4">
-        <p 
+        <p
           className="text-gray-800 leading-relaxed"
           dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
         />
       </div>
 
       {/* Attached Link Preview */}
-      {post.attachedLink && (
+      <a href= {post.Gitlink} target="_blank">
+      {post.Gitlink && (
         <div className="mb-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
           <div className="flex items-center gap-2 text-blue-600">
             <ExternalLink size={16} />
             <span className="text-sm font-medium">GitHub Repository</span>
           </div>
-          <p className="text-sm text-gray-600 mt-1">{post.attachedLink}</p>
+          <p className="text-sm text-gray-600 mt-1">{post.Gitlink}</p>
         </div>
-      )}
-
+      )}</a>
+      {/* Demo Link Preview */}
+      <a href= {post.link} target="_blank">
+      {post.link && (
+        <div className="mb-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+          <div className="flex items-center gap-2 text-blue-600">
+            <ExternalLink size={16} />
+            <span className="text-sm font-medium">demo link</span>
+          </div>
+          <p className="text-sm text-gray-600 mt-1">{post.link}</p>
+        </div>
+      )}</a>
       {/* Reaction Avatars */}
       {likesCount > 0 && (
         <div className="flex items-center gap-2 mb-3 pb-3 border-b border-gray-100">
@@ -99,24 +110,23 @@ const FeedPostCard = ({ post }) => {
         <div className="flex items-center gap-6">
           <button
             onClick={handleLike}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-              isLiked 
-                ? 'text-red-600 bg-red-50 hover:bg-red-100' 
-                : 'text-gray-600 hover:text-red-600 hover:bg-red-50'
-            }`}
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${isLiked
+              ? 'text-red-600 bg-red-50 hover:bg-red-100'
+              : 'text-gray-600 hover:text-red-600 hover:bg-red-50'
+              }`}
           >
             <Heart size={18} className={isLiked ? 'fill-current' : ''} />
             <span className="text-sm font-medium">{likesCount}</span>
           </button>
-          
+
           <button
             onClick={() => setShowComments(!showComments)}
             className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
           >
             <MessageCircle size={18} />
-            <span className="text-sm font-medium">{post.comments}</span>
+            <span className="text-sm font-medium">{post.comments?.length || 0}</span>
           </button>
-          
+
           <button className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors">
             <Share size={18} />
             <span className="text-sm font-medium">Share</span>
@@ -126,7 +136,7 @@ const FeedPostCard = ({ post }) => {
 
       {/* Comments Section */}
       {showComments && (
-        <CommentsSection postId={post.id} />
+        <CommentsSection postId={post._id} />
       )}
     </div>
   );

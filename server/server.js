@@ -12,6 +12,7 @@ import GitHubStrategy from 'passport-github2';
 import User from './models/user.js';
 import userRouter from './routes/userRouter.js';
 import dashboardRouter from './routes/dashboard.js';
+import postRouter from './routes/postrouter.js';
 
 dotenv.config();
 
@@ -170,6 +171,7 @@ app.get('/', (req, res) => {
 });
 app.use('/', userRouter);
 app.use('/dashboard', dashboardRouter);
+app.use('/post', postRouter);
 
 // DB CONNECTION
 mongoose.connect(process.env.MONGO_URI)

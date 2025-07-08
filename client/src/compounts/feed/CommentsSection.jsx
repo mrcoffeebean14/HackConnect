@@ -1,44 +1,57 @@
-
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import { Button } from '../ui/button';
 import { Heart } from 'lucide-react';
 
 const CommentsSection = ({ postId }) => {
   const [newComment, setNewComment] = useState('');
-  const [comments] = useState([
-    {
-      id: 1,
-      user: {
-        name: 'Mike Johnson',
-        avatar: '/api/placeholder/32/32',
-        username: 'mikej'
-      },
-      content: 'This looks amazing! I\'d love to help with the backend. I have experience with Python and FastAPI.',
-      timestamp: '1 hour ago',
-      likes: 3,
-      isLiked: false
-    },
-    {
-      id: 2,
-      user: {
-        name: 'Emma Wilson',
-        avatar: '/api/placeholder/32/32',
-        username: 'emmaw'
-      },
-      content: 'Great work! The UI looks really clean. Are you planning to add voice recognition features?',
-      timestamp: '45 minutes ago',
-      likes: 1,
-      isLiked: true
-    }
-  ]);
+  const [comments, setComments] = useState([]);
 
-  const handleSubmitComment = () => {
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/post/comments/${postId}`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+        const data = await response.json();
+        console.log('Fetched comments:', data);
+        if (Array.isArray(data)) {
+          setComments(data);
+        } else if (Array.isArray(data.comments)) {
+          setComments(data.comments);
+        } else {
+          setComments([]);
+        }
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+        setComments([]);
+      }
+    };
+
+    fetchComments();
+  }, [postId]);
+
+  const handleSubmitComment = async () => {
     if (!newComment.trim()) return;
-    
-    // Handle comment submission logic here
-    console.log('Adding comment:', newComment);
-    setNewComment('');
+    try {
+      const response = await fetch(`http://localhost:5000/post/comments/${postId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ content: newComment }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to add comment');
+      }
+
+      const commentData = await response.json();
+      console.log('New comment created:', commentData);
+      setComments(prev => [...prev, commentData.comment]); // ✅ Only the `comment`
+      setNewComment('');
+    } catch (error) {
+      console.error('Error submitting comment:', error);
+    }
   };
 
   return (
@@ -73,39 +86,41 @@ const CommentsSection = ({ postId }) => {
 
       {/* Comments List */}
       <div className="space-y-4">
-        {comments.map(comment => (
-          <div key={comment.id} className="flex gap-3">
-            <Avatar className="w-8 h-8">
-              <AvatarImage src={comment.user.avatar} alt={comment.user.name} />
-              <AvatarFallback>{comment.user.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-            </Avatar>
-            
-            <div className="flex-1">
-              <div className="bg-gray-50 rounded-lg px-3 py-2">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-semibold text-sm text-gray-900">{comment.user.name}</span>
-                  <span className="text-xs text-gray-500">@{comment.user.username}</span>
-                  <span className="text-xs text-gray-500">•</span>
-                  <span className="text-xs text-gray-500">{comment.timestamp}</span>
+        {(comments || []).map(comment => (
+          comment?.createdBy && (
+            <div key={comment._id} className="flex gap-3">
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={comment.createdBy.profilePicture} alt={comment.createdBy.username} />
+                <AvatarFallback>{comment.createdBy.username.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+              </Avatar>
+
+              <div className="flex-1">
+                <div className="bg-gray-50 rounded-lg px-3 py-2">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-semibold text-sm text-gray-900">{comment.createdBy.username}</span>
+                    <span className="text-xs text-gray-500">@{comment.createdBy.username}</span>
+                    <span className="text-xs text-gray-500">•</span>
+                    <span className="text-xs text-gray-500">{new Date(comment.createdAt).toLocaleString()}</span>
+                  </div>
+                  <p className="text-sm text-gray-800">{comment.content}</p>
                 </div>
-                <p className="text-sm text-gray-800">{comment.content}</p>
-              </div>
-              
-              <div className="flex items-center gap-4 mt-2">
-                <button
-                  className={`flex items-center gap-1 text-xs ${
-                    comment.isLiked ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
-                  } transition-colors`}
-                >
-                  <Heart size={12} className={comment.isLiked ? 'fill-current' : ''} />
-                  <span>{comment.likes}</span>
-                </button>
-                <button className="text-xs text-gray-500 hover:text-blue-600 transition-colors">
-                  Reply
-                </button>
+
+                <div className="flex items-center gap-4 mt-2">
+                  <button
+                    className={`flex items-center gap-1 text-xs ${
+                      comment.isLiked ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
+                    } transition-colors`}
+                  >
+                    <Heart size={12} className={comment.isLiked ? 'fill-current' : ''} />
+                    <span>{comment.likes?.length || 0}</span>
+                  </button>
+                  <button className="text-xs text-gray-500 hover:text-blue-600 transition-colors">
+                    Reply
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )
         ))}
       </div>
     </div>
