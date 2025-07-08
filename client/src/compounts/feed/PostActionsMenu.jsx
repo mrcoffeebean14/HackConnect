@@ -1,16 +1,28 @@
-
 import React from 'react';
 import { Edit3, Trash2, Flag } from 'lucide-react';
 
-const PostActionsMenu = ({ onClose, isOwner }) => {
+const PostActionsMenu = ({ onClose, isOwner, postId, onDelete }) => {
+
   const handleEdit = () => {
     console.log('Edit post');
     onClose();
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this post?')) {
-      console.log('Delete post');
+      try {
+        const response = await fetch(`http://localhost:5000/post/${postId}`, {
+          method: 'DELETE',
+          credentials: 'include',
+        });
+        if (response.ok) {
+          if (onDelete) onDelete();
+        } else {
+          alert('Failed to delete post');
+        }
+      } catch (error) {
+        alert('Error deleting post');
+      }
     }
     onClose();
   };

@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import { Button } from '../ui/button';
 import { Heart } from 'lucide-react';
+import useIsOwner from '../../hooks/useAuth';
 
 const CommentsSection = ({ postId }) => {
   const [newComment, setNewComment] = useState('');
   const [comments, setComments] = useState([]);
+  const { user } = useIsOwner();
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -15,7 +17,6 @@ const CommentsSection = ({ postId }) => {
           credentials: 'include',
         });
         const data = await response.json();
-        console.log('Fetched comments:', data);
         if (Array.isArray(data)) {
           setComments(data);
         } else if (Array.isArray(data.comments)) {
@@ -54,14 +55,46 @@ const CommentsSection = ({ postId }) => {
     }
   };
 
+  const handleLikeComment = async (commentId, isLiked) => {
+    try {
+      const response = await fetch(`http://localhost:5000/post/comment/${commentId}/like`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      });
+      if (response.ok) {
+        setComments(prevComments =>
+          prevComments.map(comment =>
+            comment._id === commentId
+              ? {
+                ...comment,
+                isLiked: !isLiked,
+                likes: isLiked
+                  ? comment.likes.filter(id => id !== (user?._id || ''))
+                  : [...(comment.likes || []), user?._id],
+              }
+              : comment
+          )
+        );
+      } else {
+        console.error('Failed to like comment');
+      }
+    } catch (error) {
+      console.error('Error liking comment:', error);
+    }
+  };
+
   return (
     <div className="mt-4 pt-4 border-t border-gray-100">
       {/* Comment Input */}
       <div className="flex gap-3 mb-4">
-        <Avatar className="w-8 h-8">
-          <AvatarImage src="/api/placeholder/32/32" alt="Your avatar" />
-          <AvatarFallback>JD</AvatarFallback>
-        </Avatar>
+        {user && (
+          <Avatar className="w-8 h-8">
+            <AvatarImage src={user.profilePicture} alt={user.username} />
+            <AvatarFallback>{user.username?.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+          </Avatar>
+        )}
+
         <div className="flex-1">
           <div className="flex gap-2">
             <input
@@ -107,9 +140,9 @@ const CommentsSection = ({ postId }) => {
 
                 <div className="flex items-center gap-4 mt-2">
                   <button
-                    className={`flex items-center gap-1 text-xs ${
-                      comment.isLiked ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
-                    } transition-colors`}
+                    onClick={() => handleLikeComment(comment._id, comment.isLiked)}
+                    className={`flex items-center gap-1 text-xs ${comment.isLiked ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
+                      } transition-colors`}
                   >
                     <Heart size={12} className={comment.isLiked ? 'fill-current' : ''} />
                     <span>{comment.likes?.length || 0}</span>

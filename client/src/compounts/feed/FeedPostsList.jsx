@@ -4,6 +4,10 @@ import FeedPostCard from './FeedPostCard';
 const FeedPostsList = () => {
   const [posts, setPosts] = useState([]); // ✅ initialize to empty array
 
+  const handleDeletePost = (postId) => {
+    setPosts(prevPosts => prevPosts.filter(post => post._id !== postId));
+  };
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -23,7 +27,7 @@ const FeedPostsList = () => {
   return (
     <div className="space-y-6">
       {posts.map((post) => (
-        <FeedPostCard key={post._id} post={post} />
+        <FeedPostCard key={post._id} post={post} onDelete={() => handleDeletePost(post._id)} />
       ))}
 
       {/* Load More Button */}

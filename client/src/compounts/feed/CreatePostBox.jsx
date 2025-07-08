@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import { Button } from '../ui/button';
 import { Textarea } from '../ui/textarea';
-import { Image, Link, Github, X } from 'lucide-react';
+import { Image, Link, Github, X, ImageOff } from 'lucide-react';
+import  useIsOwner from '../../hooks/useAuth'
 
 const CreatePostBox = () => {
   const [postText, setPostText] = useState('');
@@ -11,6 +12,7 @@ const CreatePostBox = () => {
   const [GitLink, setGitLink] = useState('');
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [showGitLinkInput, setShowGitLinkInput] = useState(false);
+  const {user} = useIsOwner();
 
 
   const handlePost = async () => {
@@ -54,10 +56,11 @@ const CreatePostBox = () => {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
       <div className="flex gap-4">
-        <Avatar className="w-10 h-10">
-          <AvatarImage src="/api/placeholder/40/40" alt="Your avatar" />
-          <AvatarFallback>JD</AvatarFallback>
-        </Avatar>
+      {user && (
+          <Avatar className="w-8 h-8">
+            <AvatarImage src={user.profilePicture} alt={user.username} />
+            <AvatarFallback>{user.username?.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+          </Avatar>)}
 
         <div className="flex-1 space-y-4">
           <Textarea

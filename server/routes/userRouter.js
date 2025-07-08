@@ -102,4 +102,13 @@ router.post('/logout', (req, res) => {
   });
 });
 
+router.get('/auth/me', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json(req.user); // ✅ send back the user
+  } else {
+    res.status(401).json({ message: 'Not authenticated' });
+  }
+});
+
+
 export default router;
